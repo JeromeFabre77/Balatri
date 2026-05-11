@@ -1,4 +1,4 @@
-package fr.uge.balatrie;
+package fr.uge.balatri;
 
 public class Main {
 
