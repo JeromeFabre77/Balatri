@@ -1,6 +1,8 @@
 package fr.uge.balatri.domain.planet;
 
 import java.util.Objects;
+import java.util.Random;
+
 import fr.uge.balatri.domain.combination.Combination;
 
 public enum Planet {
@@ -48,6 +50,12 @@ public enum Planet {
 	    }
 	    
 	    throw new IllegalArgumentException("No planet found for combination: " + combination);
+	}
+	
+	public static Planet random() {
+		var random = new Random();
+		var planets = Planet.values();
+		return planets[random.nextInt(planets.length)];
 	}
 
 	@Override

@@ -17,6 +17,9 @@ public class Main {
 		planets.put(Planet.MERCURY, 2);
 		planets.put(Planet.NEPTUNE, 1);
 		planets.put(Planet.SATURN, 3);
+		var planet = Planet.random();
+		IO.println("Planete générée aléatoirement : " + planet + System.lineSeparator());
+		planets.merge(planet, 1, Integer::sum);
 
 		var pairHand = List.of(new Card(Rank.ACE, Suit.HEARTS), new Card(Rank.ACE, Suit.SPADES));
 
