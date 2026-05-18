@@ -24,7 +24,11 @@ public final class PlayerHand {
 	}
 
 	public List<Card> get() {
-		return cards;
+		return List.copyOf(cards);
+	}
+
+	public void clear() {
+		cards.clear();
 	}
 
 	public int missingCards() {
