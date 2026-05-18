@@ -12,7 +12,6 @@ import fr.uge.balatri.domain.combination.Combination;
 
 public final class HandEvaluator {
 	private HandEvaluator() {
-		throw new AssertionError("No instance of HandEvaluator");
 	}
 
 	public static Combination evaluate(List<Card> cards) {
