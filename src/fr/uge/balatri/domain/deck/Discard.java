@@ -6,7 +6,7 @@ import module java.base;
 
 public final class Discard {
 
-	private final List<Card> cards;
+	private final ArrayList<Card> cards;
 
 	public Discard() {
 		this.cards = new ArrayList<>();

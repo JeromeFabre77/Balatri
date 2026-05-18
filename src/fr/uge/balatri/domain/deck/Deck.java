@@ -6,7 +6,7 @@ import module java.base;
 
 public final class Deck {
 
-	private final List<Card> cards;
+	private final ArrayList<Card> cards;
 
 	public Deck() {
 		this.cards = new ArrayList<>();

@@ -123,16 +123,20 @@ public class Main {
 
 		var selectedIndices = List.of(0, 1, 2, 3, 4);
 		var selectedCards = hand.selectCards(selectedIndices);
-		var discardedCards = hand.discardRemainingCards(selectedIndices);
+		var discardedCards = hand.discardAllCards();
 
 		IO.println("Cartes sélectionnées : " + selectedCards);
-		IO.println("Cartes à défausser : " + discardedCards);
+		IO.println("Cartes défaussées après sélection : " + discardedCards);
 
-		try {
-			hand.selectCards(List.of(0, 1, 2));
-		} catch (IllegalArgumentException e) {
-			IO.println("Erreur attendue : " + e.getMessage());
-		}
+		var hand2 = new PlayerHand(deck.draw(PlayerHand.HAND_SIZE));
+		IO.println("Nouvelle main du joueur : " + hand2.getCards());
+
+		var selectedIndices2 = List.of(0, 1, 2);
+		var selectedCards2 = hand2.selectCards(selectedIndices2);
+		var discardedCards2 = hand2.discardAllCards();
+
+		IO.println("Cartes sélectionnées : " + selectedCards2);
+		IO.println("Cartes défaussées après sélection : " + discardedCards2);
 
 		try {
 			hand.selectCards(List.of(0, 1, 2, 3, 8));

@@ -35,26 +35,14 @@ public final class PlayerHand {
 		return selectedCards.stream().map(cards::get).toList();
 	}
 
-	public List<Card> discardRemainingCards(List<Integer> selectedCards) {
-		Objects.requireNonNull(selectedCards);
-
-		validateSelection(selectedCards);
-
-		var selectedSet = new HashSet<>(selectedCards);
-		var remainingCards = new ArrayList<Card>();
-		for (int i = 0; i < cards.size(); i++) {
-			if (!selectedSet.contains(i)) {
-				remainingCards.add(cards.get(i));
-			}
-		}
-
-		return List.copyOf(remainingCards);
+	public List<Card> discardAllCards() {
+		return List.copyOf(cards);
 	}
 
 	private void validateSelection(List<Integer> selectedCards) {
-		if (selectedCards.size() != SELECTED_SIZE) {
+		if (selectedCards.size() < 1 || selectedCards.size() > SELECTED_SIZE) {
 			throw new IllegalArgumentException(
-					"Exactly " + SELECTED_SIZE + " cards must be selected, but got " + selectedCards.size());
+					"Must select between 1 and " + SELECTED_SIZE + " cards, but got " + selectedCards.size());
 		}
 
 		var seen = new HashSet<Integer>();
