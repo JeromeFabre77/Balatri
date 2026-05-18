@@ -9,7 +9,7 @@ public final class Deck {
 	private final ArrayList<Card> cards;
 
 	public Deck() {
-		this.cards = new ArrayList<>();
+		this.cards = new ArrayList<Card>();
 		for (var suit : Suit.values()) {
 			for (var rank : Rank.values()) {
 				cards.add(new Card(rank, suit));
@@ -32,7 +32,7 @@ public final class Deck {
 		for (var i = 0; i < count; i++) {
 			drawnCards.add(cards.removeLast());
 		}
-		return List.copyOf(drawnCards);
+		return drawnCards;
 	}
 
 	public boolean hasEnoughCards(int count) {

@@ -9,10 +9,10 @@ public final class Discard {
 	private final ArrayList<Card> cards;
 
 	public Discard() {
-		this.cards = new ArrayList<>();
+		this.cards = new ArrayList<Card>();
 	}
 
-	public void add(List<Card> newCards) {
+	public void addMany(List<Card> newCards) {
 		Objects.requireNonNull(newCards);
 		cards.addAll(newCards);
 	}

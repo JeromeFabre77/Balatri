@@ -1,8 +1,6 @@
 package fr.uge.balatri;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import module java.base;
 
 import fr.uge.balatri.domain.card.Card;
 import fr.uge.balatri.domain.card.Rank;
@@ -82,11 +80,11 @@ public class Main {
 
 		var cardsToAdd = List.of(new Card(Rank.ACE, Suit.HEARTS), new Card(Rank.KING, Suit.SPADES),
 				new Card(Rank.QUEEN, Suit.DIAMONDS));
-		discard.add(cardsToAdd);
+		discard.addMany(cardsToAdd);
 		IO.println("Taille du discard après ajout de 3 cartes : " + discard.size());
 
 		var cardsToAdd2 = List.of(new Card(Rank.JACK, Suit.CLUBS), new Card(Rank.TEN, Suit.HEARTS));
-		discard.add(cardsToAdd2);
+		discard.addMany(cardsToAdd2);
 		IO.println("Taille du discard après ajout de 2 cartes : " + discard.size());
 
 		var drawnCards = discard.drawAll();
@@ -102,11 +100,11 @@ public class Main {
 		IO.println("Taille initiale du discard : " + discard.size());
 
 		var drawnCards = deck.draw(50);
-		discard.add(drawnCards);
+		discard.addMany(drawnCards);
 		IO.println("Taille du deck après tirage de 50 cartes : " + deck.size());
 		IO.println("Taille du discard après ajout de 50 cartes : " + discard.size());
 
-		if (!deck.hasEnoughCards(PlayerHand.HAND_SIZE)) {
+		if (!deck.hasEnoughCards(PlayerHand.MAX_HAND_SIZE)) {
 			deck.refillFrom(discard.drawAll());
 		}
 
@@ -116,36 +114,45 @@ public class Main {
 
 	static void testPlayerHand() {
 		var deck = new Deck();
-		var hand = new PlayerHand(deck.draw(PlayerHand.HAND_SIZE));
+		var hand = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
 
-		IO.println("Main du joueur : " + hand.getCards());
+		IO.println("Main du joueur : " + hand.get());
 		IO.println(hand.toString());
 
-		var selectedIndices = List.of(0, 1, 2, 3, 4);
+		var selectedIndices = new HashSet<Integer>();
+		selectedIndices.add(0);
+		selectedIndices.add(1);
+		selectedIndices.add(2);
+		selectedIndices.add(3);
+		selectedIndices.add(4);
 		var selectedCards = hand.selectCards(selectedIndices);
-		var discardedCards = hand.discardAllCards();
+		var discardedCards = hand.get();
 
 		IO.println("Cartes sélectionnées : " + selectedCards);
 		IO.println("Cartes défaussées après sélection : " + discardedCards);
 
-		var hand2 = new PlayerHand(deck.draw(PlayerHand.HAND_SIZE));
-		IO.println("Nouvelle main du joueur : " + hand2.getCards());
+		var hand2 = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
+		IO.println("Nouvelle main du joueur : " + hand2.get());
 
-		var selectedIndices2 = List.of(0, 1, 2);
+		var selectedIndices2 = new HashSet<Integer>();
+		selectedIndices2.add(0);
+		selectedIndices2.add(1);
+		selectedIndices2.add(2);
 		var selectedCards2 = hand2.selectCards(selectedIndices2);
-		var discardedCards2 = hand2.discardAllCards();
+		var discardedCards2 = hand2.get();
 
 		IO.println("Cartes sélectionnées : " + selectedCards2);
 		IO.println("Cartes défaussées après sélection : " + discardedCards2);
 
+		var hand3 = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
+		var selectedIndices3 = new HashSet<Integer>();
+		selectedIndices3.add(0);
+		selectedIndices3.add(1);
+		selectedIndices3.add(2);
+		selectedIndices3.add(3);
+		selectedIndices3.add(8);
 		try {
-			hand.selectCards(List.of(0, 1, 2, 3, 8));
-		} catch (IllegalArgumentException e) {
-			IO.println("Erreur attendue : " + e.getMessage());
-		}
-
-		try {
-			hand.selectCards(List.of(0, 1, 2, 3, 3));
+			hand3.selectCards(selectedIndices3);
 		} catch (IllegalArgumentException e) {
 			IO.println("Erreur attendue : " + e.getMessage() + System.lineSeparator());
 		}
