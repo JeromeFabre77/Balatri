@@ -1,14 +1,14 @@
 package fr.uge.balatri;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import module java.base;
 
 import fr.uge.balatri.domain.card.Card;
 import fr.uge.balatri.domain.card.Rank;
 import fr.uge.balatri.domain.card.Suit;
 import fr.uge.balatri.domain.handevaluator.HandEvaluator;
 import fr.uge.balatri.domain.planet.Planet;
+import fr.uge.balatri.domain.deck.*;
+import fr.uge.balatri.domain.hand.PlayerHand;
 
 public class Main {
 	public static void main(String[] args) {
@@ -40,6 +40,11 @@ public class Main {
 		testHand("Suite avec Saturne niveau 3", straightHand, planets);
 		testHand("Suite As basse", lowAceStraightHand, planets);
 		testHand("Suite As haute", highAceStraightHand, planets);
+
+		testDeck();
+		testDiscard();
+		testDeckAndDiscard();
+		testPlayerHand();
 	}
 
 	private static void testHand(String title, List<Card> hand, Map<Planet, Integer> planets) {
@@ -52,5 +57,104 @@ public class Main {
 		IO.println("Chips de base : " + combination.chips());
 		IO.println("Multiplicateur de base : " + combination.multiplier());
 		IO.println("Score final : " + score + System.lineSeparator());
+	}
+
+	private static void testDeck() {
+		var deck = new Deck();
+		IO.println("Taille initale du deck : " + deck.size());
+
+		var drawnCards = deck.draw(8);
+		IO.println("Cartes tirées : " + drawnCards.size());
+		IO.println("Taille du deck après tirage : " + deck.size());
+
+		IO.println("A assez de cartes pour tirer 44 ? " + deck.hasEnoughCards(44));
+		IO.println("A assez de cartes pour tirer 45 ? " + deck.hasEnoughCards(45));
+
+		deck.draw(44);
+		IO.println("Taille du deck après tirage de 44 cartes : " + deck.size() + System.lineSeparator());
+	}
+
+	static void testDiscard() {
+		var discard = new Discard();
+		IO.println("Taille initiale du discard : " + discard.size());
+
+		var cardsToAdd = List.of(new Card(Rank.ACE, Suit.HEARTS), new Card(Rank.KING, Suit.SPADES),
+				new Card(Rank.QUEEN, Suit.DIAMONDS));
+		discard.addMany(cardsToAdd);
+		IO.println("Taille du discard après ajout de 3 cartes : " + discard.size());
+
+		var cardsToAdd2 = List.of(new Card(Rank.JACK, Suit.CLUBS), new Card(Rank.TEN, Suit.HEARTS));
+		discard.addMany(cardsToAdd2);
+		IO.println("Taille du discard après ajout de 2 cartes : " + discard.size());
+
+		var drawnCards = discard.drawAll();
+		IO.println("Cartes tirées du discard : " + drawnCards.size());
+		IO.println("Est ce vide ? : " + discard.isEmpty() + System.lineSeparator());
+	}
+
+	static void testDeckAndDiscard() {
+		var deck = new Deck();
+		var discard = new Discard();
+
+		IO.println("Taille initiale du deck : " + deck.size());
+		IO.println("Taille initiale du discard : " + discard.size());
+
+		var drawnCards = deck.draw(50);
+		discard.addMany(drawnCards);
+		IO.println("Taille du deck après tirage de 50 cartes : " + deck.size());
+		IO.println("Taille du discard après ajout de 50 cartes : " + discard.size());
+
+		if (!deck.hasEnoughCards(PlayerHand.MAX_HAND_SIZE)) {
+			deck.refillFrom(discard.drawAll());
+		}
+
+		IO.println("Taille du deck après refill : " + deck.size());
+		IO.println("Taille du discard après refill : " + discard.size() + System.lineSeparator());
+	}
+
+	static void testPlayerHand() {
+		var deck = new Deck();
+		var hand = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
+
+		IO.println("Main du joueur : " + hand.get());
+		IO.println(hand.toString());
+
+		var selectedIndices = new HashSet<Integer>();
+		selectedIndices.add(0);
+		selectedIndices.add(1);
+		selectedIndices.add(2);
+		selectedIndices.add(3);
+		selectedIndices.add(4);
+		var selectedCards = hand.selectCards(selectedIndices);
+		var discardedCards = hand.get();
+
+		IO.println("Cartes sélectionnées : " + selectedCards);
+		IO.println("Cartes défaussées après sélection : " + discardedCards);
+
+		var hand2 = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
+		IO.println("Nouvelle main du joueur : " + hand2.get());
+
+		var selectedIndices2 = new HashSet<Integer>();
+		selectedIndices2.add(0);
+		selectedIndices2.add(1);
+		selectedIndices2.add(2);
+		var selectedCards2 = hand2.selectCards(selectedIndices2);
+		var discardedCards2 = hand2.get();
+
+		IO.println("Cartes sélectionnées : " + selectedCards2);
+		IO.println("Cartes défaussées après sélection : " + discardedCards2);
+
+		var hand3 = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
+		var selectedIndices3 = new HashSet<Integer>();
+		selectedIndices3.add(0);
+		selectedIndices3.add(1);
+		selectedIndices3.add(2);
+		selectedIndices3.add(3);
+		selectedIndices3.add(8);
+		try {
+			hand3.selectCards(selectedIndices3);
+		} catch (IllegalArgumentException e) {
+			IO.println("Erreur attendue : " + e.getMessage() + System.lineSeparator());
+		}
 	}
 }
