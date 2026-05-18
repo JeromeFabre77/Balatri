@@ -123,26 +123,16 @@ public class Main {
 		selectedIndices.add(0);
 		selectedIndices.add(1);
 		selectedIndices.add(2);
-		selectedIndices.add(3);
-		selectedIndices.add(4);
 		var selectedCards = hand.selectCards(selectedIndices);
-		var discardedCards = hand.get();
 
 		IO.println("Cartes sélectionnées : " + selectedCards);
-		IO.println("Cartes défaussées après sélection : " + discardedCards);
 
-		var hand2 = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
-		IO.println("Nouvelle main du joueur : " + hand2.get());
+		var missing = hand.missingCards();
+		IO.println("Nombre de cartes à remplacer : " + missing);
 
-		var selectedIndices2 = new HashSet<Integer>();
-		selectedIndices2.add(0);
-		selectedIndices2.add(1);
-		selectedIndices2.add(2);
-		var selectedCards2 = hand2.selectCards(selectedIndices2);
-		var discardedCards2 = hand2.get();
-
-		IO.println("Cartes sélectionnées : " + selectedCards2);
-		IO.println("Cartes défaussées après sélection : " + discardedCards2);
+		var newCards = deck.draw(selectedCards.size());
+		hand.refill(newCards);
+		IO.println("Main du joueur après remplacement : " + hand.get());
 
 		var hand3 = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
 		var selectedIndices3 = new HashSet<Integer>();
