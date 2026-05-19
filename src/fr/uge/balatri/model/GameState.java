@@ -93,7 +93,7 @@ public final class GameState {
     }
 
     public boolean isGameWon() {
-        return currentBlindIndex >= blinds.size();
+        return isBlindBeaten() && currentBlindIndex == blinds.size() - 1;
     }
 
     public List<Card> playHand(Set<Integer> selectedIndices) {
