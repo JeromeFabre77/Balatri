@@ -14,10 +14,10 @@ public final class GameState {
     private final Deck deck;
     private final Discard discard;
     private final PlayerHand hand;
-    private final int handsRemainingInBlind;
+    private int handsRemainingInBlind;
 
     private final List<Blind> blinds;
-    private final int currentBlindIndex;
+    private int currentBlindIndex;
 
     private int cumulatedScore;
 
@@ -83,7 +83,7 @@ public final class GameState {
     }
 
     public boolean isGameOver() {
-        return isBlindBeaten() && handsRemainingInBlind == 0;
+        return !isBlindBeaten() && handsRemainingInBlind == 0;
     }
 
     public boolean isGameWon() {

@@ -20,7 +20,7 @@ public final class PlayerHand {
 					"A hand must contain " + MAX_HAND_SIZE + " cards, but got " + newCards.size());
 		}
 
-		this.cards = new ArrayList<>(newCards);
+		this.cards = new ArrayList<Card>(newCards);
 	}
 
 	public List<Card> get() {
