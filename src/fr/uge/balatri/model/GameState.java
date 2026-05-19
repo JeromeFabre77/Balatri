@@ -1,5 +1,11 @@
 package fr.uge.balatri.model;
 
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 import fr.uge.balatri.domain.blind.Blind;
 import fr.uge.balatri.domain.card.Card;
 import fr.uge.balatri.domain.deck.Deck;
