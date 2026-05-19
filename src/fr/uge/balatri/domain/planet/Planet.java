@@ -23,7 +23,7 @@ public enum Planet {
 		if (bonusChips < 1) {
 			throw new IllegalArgumentException("The chips must be greater than or equal to 1");
 		}
-		if (bonusChips < 1) {
+		if (bonusMultiplier < 1) {
 			throw new IllegalArgumentException("The multiplier must be greater than or equal to 1");
 		}
 		this.name = name;

@@ -24,24 +24,47 @@ public final class PlayerHand {
 	}
 
 	public List<Card> get() {
-		return cards;
+		return List.copyOf(cards);
 	}
 
-	public List<Card> selectCards(HashSet<Integer> selectedCards) {
-		Objects.requireNonNull(selectedCards);
-
-		validateSelection(selectedCards);
-
-		return selectedCards.stream().map(cards::get).toList();
+	public void clear() {
+		cards.clear();
 	}
 
-	private void validateSelection(HashSet<Integer> selectedCards) {
-		if (selectedCards.size() < 1 || selectedCards.size() > MAX_SELECTED_SIZE) {
+	public int missingCards() {
+		return MAX_HAND_SIZE - cards.size();
+	}
+
+	public List<Card> selectCards(Set<Integer> selectedIndices) {
+		Objects.requireNonNull(selectedIndices);
+
+		validateSelection(selectedIndices);
+
+		var selected = selectedIndices.stream().sorted().map(cards::get).toList();
+
+		selectedIndices.stream().sorted(Comparator.reverseOrder()).forEach(index -> cards.remove((int) index));
+
+		return selected;
+	}
+
+	public void refill(List<Card> newCards) {
+		Objects.requireNonNull(newCards);
+
+		if (newCards.size() != missingCards()) {
 			throw new IllegalArgumentException(
-					"Must select between 1 and " + MAX_SELECTED_SIZE + " cards, but got " + selectedCards.size());
+					"Must refill exactly " + missingCards() + " cards, but got " + newCards.size());
 		}
 
-		for (var index : selectedCards) {
+		cards.addAll(newCards);
+	}
+
+	private void validateSelection(Set<Integer> selectedIndices) {
+		if (selectedIndices.size() < 1 || selectedIndices.size() > MAX_SELECTED_SIZE) {
+			throw new IllegalArgumentException(
+					"Must select between 1 and " + MAX_SELECTED_SIZE + " cards, but got " + selectedIndices.size());
+		}
+
+		for (var index : selectedIndices) {
 			if (index < 0 || index >= cards.size()) {
 				throw new IllegalArgumentException("Selected card index out of bounds: " + index);
 			}
