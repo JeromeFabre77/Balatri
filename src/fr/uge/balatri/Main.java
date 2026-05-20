@@ -10,9 +10,9 @@ import java.util.List;
 public class Main {
 	public static void main(String[] args) {
 		var blinds = List.of(
-				new Blind("Blind 1", 300),
-				new Blind("Blind 2", 450),
-				new Blind("Blind 3", 600)
+				new Blind("Blind 1", 100),
+				new Blind("Blind 2", 150),
+				new Blind("Blind 3", 200)
 		);
 
 		var gameState = new GameState(blinds);

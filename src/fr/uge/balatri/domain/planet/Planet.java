@@ -60,6 +60,6 @@ public enum Planet {
 
 	@Override
 	public String toString() {
-		return name;
+		return name + " (" + targetCombination + ")";
 	}
 }

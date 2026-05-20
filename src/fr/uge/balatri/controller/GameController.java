@@ -1,13 +1,11 @@
 package fr.uge.balatri.controller;
 
-import fr.uge.balatri.domain.combination.Combination;
 import fr.uge.balatri.domain.handevaluator.HandEvaluator;
 import fr.uge.balatri.domain.planet.Planet;
 import fr.uge.balatri.model.GameState;
 import fr.uge.balatri.view.View;
 
 import java.util.Objects;
-import java.util.Set;
 
 public final class GameController {
 
