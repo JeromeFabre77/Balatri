@@ -1,4 +1,4 @@
-package fr.uge.balatri.domain.handevaluator;
+package fr.uge.balatri.domain;
 
 import java.util.List;
 import java.util.Map;
@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import fr.uge.balatri.domain.card.Card;
 import fr.uge.balatri.domain.card.Rank;
 import fr.uge.balatri.domain.card.Suit;
-import fr.uge.balatri.domain.combination.Combination;
 
 public final class HandEvaluator {
 	private HandEvaluator() {

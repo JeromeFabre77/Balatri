@@ -1,7 +1,7 @@
 package fr.uge.balatri.controller;
 
-import fr.uge.balatri.domain.handevaluator.HandEvaluator;
-import fr.uge.balatri.domain.planet.Planet;
+import fr.uge.balatri.domain.HandEvaluator;
+import fr.uge.balatri.domain.Planet;
 import fr.uge.balatri.model.GameState;
 import fr.uge.balatri.view.View;
 

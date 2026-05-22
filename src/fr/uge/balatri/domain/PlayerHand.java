@@ -1,4 +1,4 @@
-package fr.uge.balatri.domain.hand;
+package fr.uge.balatri.domain;
 
 import fr.uge.balatri.domain.card.Card;
 

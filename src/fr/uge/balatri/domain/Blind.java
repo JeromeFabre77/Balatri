@@ -1,4 +1,4 @@
-package fr.uge.balatri.domain.blind;
+package fr.uge.balatri.domain;
 
 import java.util.Objects;
 

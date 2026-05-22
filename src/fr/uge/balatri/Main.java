@@ -1,7 +1,7 @@
 package fr.uge.balatri;
 
 import fr.uge.balatri.controller.GameController;
-import fr.uge.balatri.domain.blind.Blind;
+import fr.uge.balatri.domain.Blind;
 import fr.uge.balatri.model.GameState;
 import fr.uge.balatri.view.ConsoleView;
  

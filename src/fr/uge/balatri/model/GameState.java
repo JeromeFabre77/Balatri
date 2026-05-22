@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import fr.uge.balatri.domain.blind.Blind;
+import fr.uge.balatri.domain.Blind;
+import fr.uge.balatri.domain.Planet;
+import fr.uge.balatri.domain.PlayerHand;
 import fr.uge.balatri.domain.card.Card;
 import fr.uge.balatri.domain.deck.Deck;
 import fr.uge.balatri.domain.deck.Discard;
-import fr.uge.balatri.domain.hand.PlayerHand;
-import fr.uge.balatri.domain.planet.Planet;
 
 public final class GameState {
 

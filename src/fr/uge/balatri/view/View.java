@@ -1,7 +1,7 @@
 package fr.uge.balatri.view;
 
-import fr.uge.balatri.domain.combination.Combination;
-import fr.uge.balatri.domain.planet.Planet;
+import fr.uge.balatri.domain.Combination;
+import fr.uge.balatri.domain.Planet;
 import fr.uge.balatri.model.GameState;
 
 import java.util.Set;

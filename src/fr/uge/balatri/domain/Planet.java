@@ -1,9 +1,7 @@
-package fr.uge.balatri.domain.planet;
+package fr.uge.balatri.domain;
 
 import java.util.Objects;
 import java.util.Random;
-
-import fr.uge.balatri.domain.combination.Combination;
 
 public enum Planet {
 	PLUTO("Pluton", Combination.HIGH_CARD, 10, 1), MERCURY("Mercure", Combination.PAIR, 15, 1),

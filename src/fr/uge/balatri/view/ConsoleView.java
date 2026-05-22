@@ -1,9 +1,9 @@
 package fr.uge.balatri.view;
 
-import fr.uge.balatri.domain.combination.Combination;
-import fr.uge.balatri.domain.planet.Planet;
 import fr.uge.balatri.model.GameState;
-import fr.uge.balatri.domain.hand.PlayerHand;
+import fr.uge.balatri.domain.Combination;
+import fr.uge.balatri.domain.Planet;
+import fr.uge.balatri.domain.PlayerHand;
 
 import java.util.HashSet;
 import java.util.Objects;
