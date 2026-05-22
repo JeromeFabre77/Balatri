@@ -1,5 +1,7 @@
 package fr.uge.balatri.domain;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,7 +15,15 @@ public final class HandEvaluator {
 	private HandEvaluator() {
 	}
 
-	public static Combination evaluate(List<Card> cards) {
+	/**
+	 * Returns the most valuable combination from a card list and modifies the card
+	 * list, keeping only the cards useful for the combination.
+	 * 
+	 * @param List<Card>2 3
+	 *
+	 * @return Combination
+	 */
+	public static Combination evaluate(ArrayList<Card> cards) {
 		Objects.requireNonNull(cards);
 
 		if (cards.isEmpty() || cards.size() > 5) {
@@ -22,7 +32,7 @@ public final class HandEvaluator {
 
 		var rankCounts = cards.stream().collect(Collectors.groupingBy(Card::rank, Collectors.counting()));
 
-		return switch (cards.size()) {
+		var combination = switch (cards.size()) {
 		case 1 -> Combination.HIGH_CARD;
 
 		case 2 -> {
@@ -62,6 +72,13 @@ public final class HandEvaluator {
 
 		default -> throw new AssertionError("Unexpected hand size");
 		};
+
+		var usefulCards = cardsUsedForCombination(cards, combination);
+
+		cards.clear();
+		cards.addAll(usefulCards);
+
+		return combination;
 	}
 
 	private static Combination evaluateFiveCards(List<Card> cards, Map<Rank, Long> rankCounts) {
@@ -103,6 +120,33 @@ public final class HandEvaluator {
 		}
 
 		return Combination.HIGH_CARD;
+	}
+
+	private static List<Card> cardsUsedForCombination(List<Card> cards, Combination combination) {
+		var rankCounts = cards.stream().collect(Collectors.groupingBy(Card::rank, Collectors.counting()));
+
+		return switch (combination) {
+		case HIGH_CARD -> highestCards(cards, 1);
+
+		case PAIR -> cardsWithRankCount(cards, rankCounts, 2);
+
+		case TWO_PAIR -> cards.stream().filter(card -> rankCounts.get(card.rank()) == 2).toList();
+
+		case THREE_OF_A_KIND -> cardsWithRankCount(cards, rankCounts, 3);
+
+		case FOUR_OF_A_KIND -> cardsWithRankCount(cards, rankCounts, 4);
+
+		case FULL_HOUSE, FLUSH, STRAIGHT, STRAIGHT_FLUSH -> new ArrayList<>(cards);
+		};
+	}
+
+	private static List<Card> cardsWithRankCount(List<Card> cards, Map<Rank, Long> rankCounts, long count) {
+		return cards.stream().filter(card -> rankCounts.get(card.rank()) == count).toList();
+	}
+
+	private static List<Card> highestCards(List<Card> cards, int limit) {
+		return cards.stream().sorted(Comparator.comparingInt((Card card) -> card.rank().value()).reversed())
+				.limit(limit).toList();
 	}
 
 	private static boolean isFlush(Map<Suit, Long> suitCounts) {

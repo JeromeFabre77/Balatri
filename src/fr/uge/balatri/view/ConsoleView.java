@@ -66,13 +66,13 @@ public final class ConsoleView implements View {
     }
 
     @Override
-    public void displayTurnResult(Combination combination, int scoreGained) {
+    public void displayTurnResult(Combination combination, int chipsCard, int scoreGained) {
         Objects.requireNonNull(combination);
 
         IO.println(separatorLine("-"));
 
         IO.println("Combinaison obtenue : " + combination);
-        IO.println("Chips : " + combination.chips() + " x " + combination.multiplier());
+        IO.println("Chips : " + chipsCard +  " + " + combination.chips() + " x " + combination.multiplier());
         IO.println("Score gagné : " + scoreGained);
 
         IO.println(separatorLine("-"));

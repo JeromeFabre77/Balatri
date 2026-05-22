@@ -2,9 +2,11 @@ package fr.uge.balatri.controller;
 
 import fr.uge.balatri.domain.HandEvaluator;
 import fr.uge.balatri.domain.Planet;
+import fr.uge.balatri.domain.card.Card;
 import fr.uge.balatri.model.GameState;
 import fr.uge.balatri.view.View;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public final class GameController {
@@ -36,15 +38,15 @@ public final class GameController {
         view.displayGameState(gameState);
 
         var selectedCardIndices = view.askCardSelection();
-        var cardsPlayed = gameState.playHand(selectedCardIndices);
+        var cardsPlayed = new ArrayList<>(gameState.playHand(selectedCardIndices));
 
         var combination = HandEvaluator.evaluate(cardsPlayed);
-        var scoreGained = combination.score(gameState.getPlanets());
+        var scoreGained = combination.score(gameState.getPlanets(), cardsPlayed);
 
         gameState.addScore(scoreGained);
         gameState.decrementHandsRemainingInBlind();
 
-        view.displayTurnResult(combination, scoreGained);
+        view.displayTurnResult(combination, Card.computeChips(cardsPlayed), scoreGained);
 
         if (gameState.isBlindBeaten()) {
             handleBlindBeaten();

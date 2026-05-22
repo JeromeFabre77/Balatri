@@ -1,7 +1,11 @@
 package fr.uge.balatri.domain;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import fr.uge.balatri.domain.card.Card;
+import fr.uge.balatri.domain.card.Rank;
 
 public enum Combination {
 	HIGH_CARD("Carte haute", 5, 1), PAIR("Paire", 10, 2), TWO_PAIR("Double paire", 20, 2),
@@ -33,13 +37,13 @@ public enum Combination {
 		return multiplier;
 	}
 
-	public int score(Map<Planet, Integer> planets) {
+	public int score(Map<Planet, Integer> planets, List<Card> cards) {
 		Objects.requireNonNull(planets);
 
 	    var planet = Planet.getPlanetByCombination(this);
 	    var level = planets.getOrDefault(planet, 0);
-
-	    var finalChips = chips + planet.bonusChips() * level;
+	    	    
+	    var finalChips = Card.computeChips(cards) + chips + planet.bonusChips() * level;
 	    var finalMultiplier = multiplier + planet.bonusMultiplier() * level;
 	    return finalChips * finalMultiplier;
 	}

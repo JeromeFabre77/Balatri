@@ -14,7 +14,7 @@ public interface View {
 
     void displayBlindBeaten(Planet planet);
 
-    void displayTurnResult(Combination combination, int scoreGained);
+    void displayTurnResult(Combination combination, int chipsCard, int scoreGained);
 
     void displayGameOver(int totalScore);
 
