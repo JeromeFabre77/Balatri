@@ -2,7 +2,9 @@ package fr.uge.balatri.domain.deck;
 
 import fr.uge.balatri.domain.card.Card;
 
-import module java.base;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public final class Discard {
 

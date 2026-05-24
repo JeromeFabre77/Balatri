@@ -15,151 +15,177 @@ import fr.uge.balatri.domain.deck.Discard;
 
 public final class GameState {
 
-    public static final int MAX_HAND_PER_BLIND = 4;
+	public static final int MAX_HAND_PER_BLIND = 4;
+	public static final int MAX_DISCARD_PER_BLIND = 3;
 
-    private final Deck deck;
-    private final Discard discard;
-    private final PlayerHand hand;
-    private int handsRemainingInBlind;
+	private final Deck deck;
+	private final Discard discard;
+	private final PlayerHand hand;
+	private int handsRemainingInBlind;
+	private int discardRemainingInBlind;
 
-    private final List<Blind> blinds;
-    private int currentBlindIndex;
+	private final List<Blind> blinds;
+	private int currentBlindIndex;
 
-    private int cumulatedScore;
+	private int cumulatedScore;
 
-    private final Map<Planet, Integer> planets;
+	private final Map<Planet, Integer> planets;
 
-    public GameState(List<Blind> blinds) {
-        Objects.requireNonNull(blinds);
-        if (blinds.isEmpty()) {
-            throw new IllegalArgumentException("Blinds list cannot be empty");
-        }
+	public GameState(List<Blind> blinds) {
+		Objects.requireNonNull(blinds);
+		if (blinds.isEmpty()) {
+			throw new IllegalArgumentException("Blinds list cannot be empty");
+		}
 
-        this.deck = new Deck();
-        this.discard = new Discard();
-        this.hand = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
-        this.handsRemainingInBlind = MAX_HAND_PER_BLIND;
+		this.deck = new Deck();
+		this.discard = new Discard();
+		this.hand = new PlayerHand(deck.draw(PlayerHand.MAX_HAND_SIZE));
+		this.handsRemainingInBlind = MAX_HAND_PER_BLIND;
+		this.discardRemainingInBlind = MAX_DISCARD_PER_BLIND;
 
-        this.blinds = List.copyOf(blinds);
-        this.currentBlindIndex = 0;
+		this.blinds = List.copyOf(blinds);
+		this.currentBlindIndex = 0;
 
-        this.cumulatedScore = 0;
+		this.cumulatedScore = 0;
 
-        this.planets = new EnumMap<>(Planet.class);
-    }
+		this.planets = new EnumMap<>(Planet.class);
+	}
 
-    public int getDeckSize() {
-        return deck.size();
-    }
+	public int getDeckSize() {
+		return deck.size();
+	}
 
-    public int getDiscardSize() {
-        return discard.size();
-    }
+	public int getDiscardSize() {
+		return discard.size();
+	}
 
-    public List<Card> getHandCards() {
-        return hand.get();
-    }
+	public List<Card> getHandCards() {
+		return hand.get();
+	}
 
-    public int getHandsRemainingInBlind() {
-        return handsRemainingInBlind;
-    }
+	public int getHandsRemainingInBlind() {
+		return handsRemainingInBlind;
+	}
 
-    public int getCumulatedScore() {
-        return cumulatedScore;
-    }
+	public int getDiscardRemainingInBlind() {
+		return discardRemainingInBlind;
+	}
 
-    public Map<Planet, Integer> getPlanets() {
-        return Map.copyOf(planets);
-    }
+	public boolean canDiscard() {
+		return discardRemainingInBlind > 0;
+	}
 
-    public Blind currentBlind() {
-        return blinds.get(currentBlindIndex);
-    }
+	public int getCumulatedScore() {
+		return cumulatedScore;
+	}
 
-    public int totalBlinds() {
-        return blinds.size();
-    }
+	public Map<Planet, Integer> getPlanets() {
+		return Map.copyOf(planets);
+	}
 
-    public int getCurrentBlindIndex() {
-        return currentBlindIndex;
-    }
+	public Blind currentBlind() {
+		return blinds.get(currentBlindIndex);
+	}
 
-    public boolean isBlindBeaten() {
-        return cumulatedScore >= currentBlind().score();
-    }
+	public int totalBlinds() {
+		return blinds.size();
+	}
 
-    public boolean isGameOver() {
-        return !isBlindBeaten() && handsRemainingInBlind == 0;
-    }
+	public int getCurrentBlindIndex() {
+		return currentBlindIndex;
+	}
 
-    public boolean isGameWon() {
-        return isBlindBeaten() && currentBlindIndex == blinds.size() - 1;
-    }
+	public boolean isBlindBeaten() {
+		return cumulatedScore >= currentBlind().score();
+	}
 
-    public List<Card> playHand(Set<Integer> selectedIndices) {
-        Objects.requireNonNull(selectedIndices);
+	public boolean isGameOver() {
+		return !isBlindBeaten() && handsRemainingInBlind == 0;
+	}
 
-        var selectedCards = hand.selectCards(selectedIndices);
+	public boolean isGameWon() {
+		return isBlindBeaten() && currentBlindIndex == blinds.size() - 1;
+	}
 
-        discard.addMany(selectedCards);
+	public List<Card> playHand(Set<Integer> selectedIndices) {
+		Objects.requireNonNull(selectedIndices);
 
-        refillHand();
+		var selectedCards = hand.selectCards(selectedIndices);
 
-        return selectedCards;
-    }
+		discard.addMany(selectedCards);
 
-    public void addScore(int score) {
-        if (score < 0) {
-            throw new IllegalArgumentException("Score must be non-negative");
-        }
+		refillHand();
 
-        cumulatedScore += score;
-    }
+		return selectedCards;
+	}
 
-    public void decrementHandsRemainingInBlind() {
-        if (handsRemainingInBlind <= 0) {
-            throw new IllegalStateException("No hands remaining in current blind");
-        }
+	public void discardCards(Set<Integer> selectedIndices) {
+		Objects.requireNonNull(selectedIndices);
 
-        handsRemainingInBlind--;
-    }
+		if (discardRemainingInBlind <= 0) {
+			throw new IllegalStateException("No discards remaining in current blind");
+		}
 
-    public void addPlanet(Planet planet) {
-        Objects.requireNonNull(planet);
+		var discardedCards = hand.selectCards(selectedIndices);
 
-        planets.merge(planet, 1, Integer::sum);
-    }
+		discard.addMany(discardedCards);
 
-    public void nextBlind() {
-        if (!isBlindBeaten()) {
-            throw new IllegalStateException("Current blind is not beaten yet");
-        }
+		refillHand();
 
-        if (currentBlindIndex >= blinds.size() - 1) {
-            throw new IllegalStateException("No more blinds available");
-        }
+		discardRemainingInBlind--;
+	}
 
-        discard.addMany(hand.get());
-        hand.clear();
+	public void addScore(int score) {
+		if (score < 0) {
+			throw new IllegalArgumentException("Score must be non-negative");
+		}
 
-        deck.refillFrom(discard.drawAll());
+		cumulatedScore += score;
+	}
 
-        hand.refill(deck.draw(PlayerHand.MAX_HAND_SIZE));
+	public void decrementHandsRemainingInBlind() {
+		if (handsRemainingInBlind <= 0) {
+			throw new IllegalStateException("No hands remaining in current blind");
+		}
 
-        currentBlindIndex++;
-        cumulatedScore = 0;
-        handsRemainingInBlind = MAX_HAND_PER_BLIND;
-    }
+		handsRemainingInBlind--;
+	}
 
-    private void refillHand() {
-        var missing = hand.missingCards();
+	public void addPlanet(Planet planet) {
+		Objects.requireNonNull(planet);
 
-        if (missing > 0) {
-            if (!deck.hasEnoughCards(missing)) {
-                deck.refillFrom(discard.drawAll());
-            }
+		planets.merge(planet, 1, Integer::sum);
+	}
 
-            hand.refill(deck.draw(missing));
-        }
-    }
+	public void nextBlind() {
+		if (!isBlindBeaten()) {
+			throw new IllegalStateException("Current blind is not beaten yet");
+		}
+
+		if (currentBlindIndex >= blinds.size() - 1) {
+			throw new IllegalStateException("No more blinds available");
+		}
+
+		discard.addMany(hand.get());
+		hand.clear();
+		deck.refillFrom(discard.drawAll());
+		hand.refill(deck.draw(PlayerHand.MAX_HAND_SIZE));
+
+		currentBlindIndex++;
+		cumulatedScore = 0;
+		handsRemainingInBlind = MAX_HAND_PER_BLIND;
+		discardRemainingInBlind = MAX_DISCARD_PER_BLIND;
+	}
+
+	private void refillHand() {
+		var missing = hand.missingCards();
+
+		if (missing > 0) {
+			if (!deck.hasEnoughCards(missing)) {
+				deck.refillFrom(discard.drawAll());
+			}
+
+			hand.refill(deck.draw(missing));
+		}
+	}
 }

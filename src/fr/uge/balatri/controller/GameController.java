@@ -11,57 +11,74 @@ import java.util.Objects;
 
 public final class GameController {
 
-    private final GameState gameState;
-    private final View view;
+	private final GameState gameState;
+	private final View view;
 
-    public GameController(GameState gameState, View view) {
-        Objects.requireNonNull(gameState);
-        Objects.requireNonNull(view);
+	public GameController(GameState gameState, View view) {
+		Objects.requireNonNull(gameState);
+		Objects.requireNonNull(view);
 
-        this.gameState = gameState;
-        this.view = view;
-    }
+		this.gameState = gameState;
+		this.view = view;
+	}
 
-    public void gameLoop() {
-        while (!gameState.isGameOver() && !gameState.isGameWon()) {
-            turnLoop();
-        }
+	public void gameLoop() {
+		while (!gameState.isGameOver() && !gameState.isGameWon()) {
+			turnLoop();
+		}
 
-        if (gameState.isGameWon()) {
-            view.displayGameWon(gameState.getCumulatedScore());
-        } else {
-            view.displayGameOver(gameState.getCumulatedScore());
-        }
-    }
+		if (gameState.isGameWon()) {
+			view.displayGameWon(gameState.getCumulatedScore());
+		} else {
+			view.displayGameOver(gameState.getCumulatedScore());
+		}
+	}
 
-    private void turnLoop() {
-        view.displayGameState(gameState);
+	private void turnLoop() {
+		view.displayGameState(gameState);
 
-        var selectedCardIndices = view.askCardSelection();
-        var cardsPlayed = new ArrayList<>(gameState.playHand(selectedCardIndices));
+		if (view.askAction(gameState)) {
+			handlePlay();
+		} else {
+			handleDiscard();
+		}
+	}
 
-        var combination = HandEvaluator.evaluate(cardsPlayed);
-        var scoreGained = combination.score(gameState.getPlanets(), cardsPlayed);
+	private void handlePlay() {
+		var selectedCardIndices = view.askCardSelection();
+		var cardsPlayed = new ArrayList<>(gameState.playHand(selectedCardIndices));
 
-        gameState.addScore(scoreGained);
-        gameState.decrementHandsRemainingInBlind();
+		var combination = HandEvaluator.evaluate(cardsPlayed);
+		var scoreGained = combination.score(gameState.getPlanets(), cardsPlayed);
 
-        view.displayTurnResult(combination, Card.computeChips(cardsPlayed), scoreGained);
+		gameState.addScore(scoreGained);
+		gameState.decrementHandsRemainingInBlind();
 
-        if (gameState.isBlindBeaten()) {
-            handleBlindBeaten();
-        }
-    }
+		view.displayTurnResult(combination, Card.computeChips(cardsPlayed), scoreGained);
 
-    private void handleBlindBeaten() {
-        var planet = Planet.random();
-        gameState.addPlanet(planet);
+		if (gameState.isBlindBeaten()) {
+			handleBlindBeaten();
+		}
+	}
 
-        view.displayBlindBeaten(planet);
+	private void handleDiscard() {
+		if (!gameState.canDiscard()) {
+			throw new IllegalStateException("No discards remaining in current blind");
+		}
 
-        if (!gameState.isGameWon()) {
-            gameState.nextBlind();
-        }
-    }
+		var selectedCardIndices = view.askDiscardSelection();
+		gameState.discardCards(selectedCardIndices);
+	}
+
+	private void handleBlindBeaten() {
+		var planet = Planet.random();
+		gameState.addPlanet(planet);
+
+		view.displayBlindBeaten(planet);
+
+		if (!gameState.isGameWon()) {
+			gameState.nextBlind();
+		}
+	}
 
 }

@@ -39,17 +39,17 @@ public enum Planet {
 	}
 
 	public static Planet getPlanetByCombination(Combination combination) {
-	    Objects.requireNonNull(combination);
+		Objects.requireNonNull(combination);
 
-	    for (var planet : Planet.values()) {
-	        if (planet.targetCombination.equals(combination)) {
-	            return planet;
-	        }
-	    }
-	    
-	    throw new IllegalArgumentException("No planet found for combination: " + combination);
+		for (var planet : Planet.values()) {
+			if (planet.targetCombination.equals(combination)) {
+				return planet;
+			}
+		}
+
+		throw new IllegalArgumentException("No planet found for combination: " + combination);
 	}
-	
+
 	public static Planet random() {
 		var random = new Random();
 		var planets = Planet.values();
