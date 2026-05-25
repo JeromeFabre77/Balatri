@@ -58,6 +58,6 @@ public enum Planet {
 
 	@Override
 	public String toString() {
-		return name + " (" + targetCombination + ")";
+		return name + " : (chips : " + bonusChips + " multiplier : " + bonusMultiplier + ") (" + targetCombination + ")";
 	}
 }

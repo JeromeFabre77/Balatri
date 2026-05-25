@@ -20,7 +20,5 @@ public interface View {
 
 	void displayTurnResult(Combination combination, int chipsCard, int scoreGained);
 
-	void displayGameOver(int totalScore);
-
-	void displayGameWon(int totalScore);
+	void displayGameOver(int totalScore, boolean isWon);
 }
