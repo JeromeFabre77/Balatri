@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import fr.uge.balatri.domain.card.Card;
-import fr.uge.balatri.domain.card.Rank;
 
 public enum Combination {
 	HIGH_CARD("Carte haute", 5, 1), PAIR("Paire", 10, 2), TWO_PAIR("Double paire", 20, 2),

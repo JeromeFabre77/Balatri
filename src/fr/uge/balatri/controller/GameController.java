@@ -26,12 +26,7 @@ public final class GameController {
 		while (!gameState.isGameOver() && !gameState.isGameWon()) {
 			turnLoop();
 		}
-
-		if (gameState.isGameWon()) {
-			view.displayGameWon(gameState.getCumulatedScore());
-		} else {
-			view.displayGameOver(gameState.getCumulatedScore());
-		}
+		view.displayGameOver(gameState.getCumulatedScore(), gameState.isGameWon());
 	}
 
 	private void turnLoop() {
@@ -69,7 +64,7 @@ public final class GameController {
 		var selectedCardIndices = view.askDiscardSelection();
 		gameState.discardCards(selectedCardIndices);
 	}
-
+  
 	private void handleBlindBeaten() {
 		var planet = Planet.random();
 		gameState.addPlanet(planet);

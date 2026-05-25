@@ -126,23 +126,23 @@ public final class ConsoleView implements View {
 	}
 
 	@Override
-	public void displayGameOver(int totalScore) {
-		IO.println(separatorLine("!"));
+	public void displayGameOver(int totalScore, boolean isWon) {
+		if (isWon) {
 
-		IO.println("Game Over !");
-		IO.println("Votre score final : " + totalScore);
+			IO.println(separatorLine("*"));
 
-		IO.println(separatorLine("!"));
-	}
+			IO.println("Félicitations ! Vous avez conquis toutes les planètes !");
+			IO.println("Votre score final : " + totalScore);
 
-	@Override
-	public void displayGameWon(int totalScore) {
-		IO.println(separatorLine("*"));
+			IO.println(separatorLine("*"));
+		} else {
+			IO.println(separatorLine("!"));
 
-		IO.println("Félicitations ! Vous avez conquis toutes les planètes !");
-		IO.println("Votre score final : " + totalScore);
+			IO.println("Game Over !");
+			IO.println("Votre score final : " + totalScore);
 
-		IO.println(separatorLine("*"));
+			IO.println(separatorLine("!"));
+		}
 	}
 
 	private void displayHand(GameState gameState) {
