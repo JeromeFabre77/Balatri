@@ -8,13 +8,19 @@ import java.util.Set;
 
 public interface View {
 
-    void displayGameState(GameState gameState);
+	void displayGameState(GameState gameState);
 
-    Set<Integer> askCardSelection();
+	boolean askAction(GameState gameState);
 
-    void displayBlindBeaten(Planet planet);
+	Set<Integer> askCardSelection();
 
-    void displayTurnResult(Combination combination, int chipsCard, int scoreGained);
+	Set<Integer> askDiscardSelection();
 
-    void displayGameOver(int totalScore, boolean isWin);
+	void displayBlindBeaten(Planet planet);
+
+	void displayTurnResult(Combination combination, int chipsCard, int scoreGained);
+
+	void displayGameOver(int totalScore);
+
+	void displayGameWon(int totalScore);
 }

@@ -11,7 +11,7 @@ public enum Rank {
 
 	Rank(String name, int value) {
 		Objects.requireNonNull(name);
-		if(value < 2) {
+		if (value < 2) {
 			throw new IllegalArgumentException("The value must be greater than or equal to 2");
 		}
 		this.name = name;

@@ -17,10 +17,10 @@ public enum Combination {
 
 	Combination(String name, int chips, int multiplier) {
 		Objects.requireNonNull(name);
-		if(chips < 1) {
+		if (chips < 1) {
 			throw new IllegalArgumentException("The chips must be greater than or equal to 1");
 		}
-		if(multiplier < 1) {
+		if (multiplier < 1) {
 			throw new IllegalArgumentException("The multiplier must be greater than or equal to 1");
 		}
 		this.name = name;
@@ -39,14 +39,14 @@ public enum Combination {
 	public int score(Map<Planet, Integer> planets, List<Card> cards) {
 		Objects.requireNonNull(planets);
 
-	    var planet = Planet.getPlanetByCombination(this);
-	    var level = planets.getOrDefault(planet, 0);
-	    	    
-	    var finalChips = Card.computeChips(cards) + chips + planet.bonusChips() * level;
-	    var finalMultiplier = multiplier + planet.bonusMultiplier() * level;
-	    return finalChips * finalMultiplier;
+		var planet = Planet.getPlanetByCombination(this);
+		var level = planets.getOrDefault(planet, 0);
+
+		var finalChips = Card.computeChips(cards) + chips + planet.bonusChips() * level;
+		var finalMultiplier = multiplier + planet.bonusMultiplier() * level;
+		return finalChips * finalMultiplier;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;

@@ -24,6 +24,7 @@ public final class ConsoleView implements View {
 				+ gameState.currentBlind().score() + " )");
 		IO.println("Score cumulé : " + gameState.getCumulatedScore());
 		IO.println("Mains restantes dans le blind : " + gameState.getHandsRemainingInBlind());
+		IO.println("Défausses restantes dans le blind : " + gameState.getDiscardRemainingInBlind());
 		IO.println("Deck : " + gameState.getDeckSize() + " cartes restantes | Défausse : " + gameState.getDiscardSize()
 				+ " cartes");
 
@@ -37,9 +38,55 @@ public final class ConsoleView implements View {
 	}
 
 	@Override
+	public boolean askAction(GameState gameState) {
+		Objects.requireNonNull(gameState);
+
+		while (true) {
+			if (gameState.canDiscard()) {
+				IO.println("Voulez-vous jouer une main (j) ou défausser des cartes (d) ? ");
+			} else {
+				IO.println("Vous n'avez plus de défausses restantes dans ce blind, vous devez jouer une main (j).");
+			}
+
+			var input = scanner.nextLine().trim().toLowerCase();
+
+			switch (input) {
+			case "j" -> {
+				return true;
+			}
+			case "d" -> {
+				if (!gameState.canDiscard()) {
+					IO.println("Vous n'avez plus de défausses restantes dans ce blind.");
+					continue;
+				}
+				return false;
+			}
+			default -> IO.println("Entrée invalide. Veuillez entrer 'j' pour jouer ou 'd' pour défausser.");
+			}
+		}
+	}
+
+	@Override
 	public Set<Integer> askCardSelection() {
 		while (true) {
 			IO.println("Sélectionnez les cartes à jouer (ex : 0 2 4) : ");
+
+			var input = scanner.nextLine().trim();
+
+			try {
+				return parseCardSelection(input);
+			} catch (IllegalArgumentException e) {
+				IO.println("Erreur : " + e.getMessage());
+				IO.println("Entrez entre 1 et " + PlayerHand.MAX_SELECTED_SIZE
+						+ " indices de cartes valides, séparés par des espaces.");
+			}
+		}
+	}
+
+	@Override
+	public Set<Integer> askDiscardSelection() {
+		while (true) {
+			IO.println("Sélectionnez les cartes à défausser (ex : 0 2 4) : ");
 
 			var input = scanner.nextLine().trim();
 
