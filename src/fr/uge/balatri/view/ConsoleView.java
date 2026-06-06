@@ -38,8 +38,10 @@ public final class ConsoleView implements View {
 	}
 
 	@Override
-	public boolean askAction(GameState gameState) {
+	public PlayerAction askTurn(GameState gameState) {
 		Objects.requireNonNull(gameState);
+
+		var selectedIndices = askCardSelection();
 
 		while (true) {
 			if (gameState.canDiscard()) {
@@ -51,51 +53,17 @@ public final class ConsoleView implements View {
 			var input = scanner.nextLine().trim().toLowerCase();
 
 			switch (input) {
-			case "j" -> {
-				return true;
-			}
-			case "d" -> {
-				if (!gameState.canDiscard()) {
-					IO.println("Vous n'avez plus de défausses restantes dans ce blind.");
-					continue;
+				case "j" -> {
+					return new PlayerAction(true, selectedIndices);
 				}
-				return false;
-			}
-			default -> IO.println("Entrée invalide. Veuillez entrer 'j' pour jouer ou 'd' pour défausser.");
-			}
-		}
-	}
-
-	@Override
-	public Set<Integer> askCardSelection() {
-		while (true) {
-			IO.println("Sélectionnez les cartes à jouer (ex : 0 2 4) : ");
-
-			var input = scanner.nextLine().trim();
-
-			try {
-				return parseCardSelection(input);
-			} catch (IllegalArgumentException e) {
-				IO.println("Erreur : " + e.getMessage());
-				IO.println("Entrez entre 1 et " + PlayerHand.MAX_SELECTED_SIZE
-						+ " indices de cartes valides, séparés par des espaces.");
-			}
-		}
-	}
-
-	@Override
-	public Set<Integer> askDiscardSelection() {
-		while (true) {
-			IO.println("Sélectionnez les cartes à défausser (ex : 0 2 4) : ");
-
-			var input = scanner.nextLine().trim();
-
-			try {
-				return parseCardSelection(input);
-			} catch (IllegalArgumentException e) {
-				IO.println("Erreur : " + e.getMessage());
-				IO.println("Entrez entre 1 et " + PlayerHand.MAX_SELECTED_SIZE
-						+ " indices de cartes valides, séparés par des espaces.");
+				case "d" -> {
+					if (!gameState.canDiscard()) {
+						IO.println("Vous n'avez plus de défausses restantes dans ce blind.");
+						continue;
+					}
+					return new PlayerAction(false, selectedIndices);
+				}
+				default -> IO.println("Entrée invalide. Veuillez entrer 'j' pour jouer ou 'd' pour défausser.");
 			}
 		}
 	}
@@ -165,6 +133,22 @@ public final class ConsoleView implements View {
 		planets.forEach((planet, count) -> {
 			IO.println("- " + planet + " (x" + count + ")");
 		});
+	}
+	
+	private Set<Integer> askCardSelection() {
+		while (true) {
+			IO.println("Sélectionnez les cartes à jouer (ex : 0 2 4) : ");
+
+			var input = scanner.nextLine().trim();
+
+			try {
+				return parseCardSelection(input);
+			} catch (IllegalArgumentException e) {
+				IO.println("Erreur : " + e.getMessage());
+				IO.println("Entrez entre 1 et " + PlayerHand.MAX_SELECTED_SIZE
+						+ " indices de cartes valides, séparés par des espaces.");
+			}
+		}
 	}
 
 	private Set<Integer> parseCardSelection(String input) {

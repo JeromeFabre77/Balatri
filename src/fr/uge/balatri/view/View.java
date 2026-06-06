@@ -10,11 +10,7 @@ public interface View {
 
 	void displayGameState(GameState gameState);
 
-	boolean askAction(GameState gameState);
-
-	Set<Integer> askCardSelection();
-
-	Set<Integer> askDiscardSelection();
+	PlayerAction askTurn(GameState gameState);
 
 	void displayBlindBeaten(Planet planet);
 

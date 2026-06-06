@@ -8,6 +8,7 @@ import fr.uge.balatri.view.View;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Set;
 
 public final class GameController {
 
@@ -32,16 +33,17 @@ public final class GameController {
 	private void turnLoop() {
 		view.displayGameState(gameState);
 
-		if (view.askAction(gameState)) {
-			handlePlay();
+		var playerAction = view.askTurn(gameState);
+
+		if (playerAction.isPlay()) {
+			handlePlay(playerAction.selectedIndices());
 		} else {
-			handleDiscard();
+			handleDiscard(playerAction.selectedIndices());
 		}
 	}
 
-	private void handlePlay() {
-		var selectedCardIndices = view.askCardSelection();
-		var cardsPlayed = new ArrayList<>(gameState.playHand(selectedCardIndices));
+	private void handlePlay(Set<Integer> selectedIndices) {
+		var cardsPlayed = new ArrayList<>(gameState.playHand(selectedIndices));
 
 		var combination = HandEvaluator.evaluate(cardsPlayed);
 		var scoreGained = combination.score(gameState.getPlanets(), cardsPlayed);
@@ -56,13 +58,12 @@ public final class GameController {
 		}
 	}
 
-	private void handleDiscard() {
+	private void handleDiscard(Set<Integer> selectedIndices) {
 		if (!gameState.canDiscard()) {
 			throw new IllegalStateException("No discards remaining in current blind");
 		}
 
-		var selectedCardIndices = view.askDiscardSelection();
-		gameState.discardCards(selectedCardIndices);
+		gameState.discardCards(selectedIndices);
 	}
   
 	private void handleBlindBeaten() {
