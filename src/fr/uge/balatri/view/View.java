@@ -12,9 +12,9 @@ public interface View {
 
 	PlayerAction askTurn(GameState gameState);
 
-	void displayBlindBeaten(Planet planet);
+	void displayBlindBeaten(GameState gameState, Planet planet);
 
-	void displayTurnResult(Combination combination, int chipsCard, int scoreGained);
+	void displayTurnResult(GameState gameState, Combination combination, int chipsCard, int scoreGained);
 
 	void displayGameOver(int totalScore, boolean isWon);
 }

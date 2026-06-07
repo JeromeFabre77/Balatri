@@ -51,7 +51,7 @@ public final class GameController {
 		gameState.addScore(scoreGained);
 		gameState.decrementHandsRemainingInBlind();
 
-		view.displayTurnResult(combination, Card.computeChips(cardsPlayed), scoreGained);
+		view.displayTurnResult(gameState, combination, Card.computeChips(cardsPlayed), scoreGained);
 
 		if (gameState.isBlindBeaten()) {
 			handleBlindBeaten();
@@ -70,7 +70,7 @@ public final class GameController {
 		var planet = Planet.random();
 		gameState.addPlanet(planet);
 
-		view.displayBlindBeaten(planet);
+		view.displayBlindBeaten(gameState, planet);
 
 		if (!gameState.isGameWon()) {
 			gameState.nextBlind();

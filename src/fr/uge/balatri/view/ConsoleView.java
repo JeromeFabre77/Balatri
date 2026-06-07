@@ -69,7 +69,7 @@ public final class ConsoleView implements View {
 	}
 
 	@Override
-	public void displayBlindBeaten(Planet planet) {
+	public void displayBlindBeaten(GameState gameState,Planet planet) {
 		Objects.requireNonNull(planet);
 
 		IO.println(separatorLine("*"));
@@ -81,7 +81,7 @@ public final class ConsoleView implements View {
 	}
 
 	@Override
-	public void displayTurnResult(Combination combination, int chipsCard, int scoreGained) {
+	public void displayTurnResult(GameState gameState, Combination combination, int chipsCard, int scoreGained) {
 		Objects.requireNonNull(combination);
 
 		IO.println(separatorLine("-"));
