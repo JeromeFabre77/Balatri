@@ -34,6 +34,9 @@ public final class GraphicView implements View {
 	private static final Color BANNER_BACKGROUND_COLOR = new Color(30, 20, 50, 220);
 	private static final Color BANNER_TITLE_COLOR = new Color(255, 215, 0);
 	private static final Color PLANET_TEXT_COLOR = new Color(180, 220, 255);
+	private static final Color GAME_OVER_COLOR = new Color(220, 50, 50);
+	private static final Color VICTORY_COLOR = new Color(50, 200, 80);
+	private static final Color QUIT_BUTTON_COLOR = new Color(200, 30, 30);
 
 	private static final int HEADER_X = 40;
 	private static final int HEADER_Y = 35;
@@ -57,6 +60,7 @@ public final class GraphicView implements View {
 
 	private Rectangle2D.Float playButtonBounds;
 	private Rectangle2D.Float discardButtonBounds;
+	private Rectangle2D.Float quitButtonBounds;
 	private List<Rectangle2D.Float> cardBounds = new ArrayList<Rectangle2D.Float>();
 
 	public GraphicView(ApplicationContext context) {
@@ -280,6 +284,24 @@ public final class GraphicView implements View {
 		drawBanner(graphics, "Main jouée !", lines, screenWidth, screenHeight);
 	}
 
+	private void drawGameOverScreen(Graphics2D graphics, int totalScore, boolean isWon, int screenWidth,
+			int screenHeight) {
+		graphics.setColor(BACKGROUND_COLOR);
+		graphics.fillRect(0, 0, screenWidth, screenHeight);
+
+		graphics.setColor(isWon ? VICTORY_COLOR : GAME_OVER_COLOR);
+		graphics.setFont(new Font("Arial", Font.BOLD, 64));
+		drawCenteredString(graphics, isWon ? "Félicitations !" : "Game Over !", 0, screenHeight / 2 - 60, screenWidth);
+
+		graphics.setColor(TEXT_COLOR);
+		graphics.setFont(new Font("Arial", Font.PLAIN, 28));
+		drawCenteredString(graphics, "Score final : " + totalScore, 0, screenHeight / 2, screenWidth);
+
+		quitButtonBounds = new Rectangle2D.Float((screenWidth - BUTTON_WIDTH) / 2, screenHeight / 2 + 60, BUTTON_WIDTH,
+				BUTTON_HEIGHT);
+		drawButton(graphics, quitButtonBounds, QUIT_BUTTON_COLOR, "Quitter");
+	}
+
 	@Override
 	public PlayerAction askTurn(GameState gameState) {
 		Objects.requireNonNull(gameState);
@@ -321,8 +343,10 @@ public final class GraphicView implements View {
 						return new PlayerAction(false, Set.copyOf(selected));
 					}
 				}
-				case KeyboardEvent _ -> {
-					continue;
+				case KeyboardEvent ke -> {
+					if (ke.key() == KeyboardEvent.Key.ESCAPE) {
+						System.exit(0);
+					}
 				}
 			}
 		}
@@ -370,6 +394,27 @@ public final class GraphicView implements View {
 
 	@Override
 	public void displayGameOver(int totalScore, boolean isWon) {
-		// TODO Auto-generated method stub
+		while (true) {
+			context.renderFrame(graphics -> {
+				var screenInfo = context.getScreenInfo();
+				drawGameOverScreen(graphics, totalScore, isWon, screenInfo.width(), screenInfo.height());
+			});
+
+			var event = context.pollOrWaitEvent(Long.MAX_VALUE);
+			if (event == null)
+				continue;
+
+			switch (event) {
+				case PointerEvent pe -> {
+					if (pe.action() != PointerEvent.Action.POINTER_UP)
+						continue;
+					if (quitButtonBounds != null && quitButtonBounds.contains(pe.location().x(), pe.location().y())) {
+						System.exit(0);
+					}
+				}
+				case KeyboardEvent _ -> {
+				}
+			}
+		}
 	}
 }
