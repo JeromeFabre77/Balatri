@@ -30,7 +30,7 @@ public final class GraphicView implements View {
 	private static final Color PLAY_BUTTON_COLOR = new Color(210, 50, 130);
 	private static final Color DISCARD_BUTTON_COLOR = new Color(180, 45, 70);
 	private static final Color DISABLED_BUTTON_COLOR = new Color(80, 70, 90);
-	private static final Color BORDER_COLOR = new Color(230, 185, 0);
+	private static final Color BORDER_COLOR = new Color(0, 160, 0);
 	private static final Color BANNER_BACKGROUND_COLOR = new Color(30, 20, 50, 220);
 	private static final Color BANNER_TITLE_COLOR = new Color(255, 215, 0);
 	private static final Color PLANET_TEXT_COLOR = new Color(180, 220, 255);
@@ -42,9 +42,9 @@ public final class GraphicView implements View {
 	private static final int HEADER_Y = 35;
 	private static final int HEADER_HEIGHT = 190;
 
-	private static final int CARD_WIDTH = 140;
-	private static final int CARD_HEIGHT = 200;
-	private static final int CARD_GAP = 22;
+	private static final int CARD_WIDTH = 160;
+	private static final int CARD_HEIGHT = 215;
+	private static final int CARD_GAP = 24;
 	private static final int CARD_SELECTED_LIFT = 30;
 
 	private static final int BUTTON_WIDTH = 170;
@@ -202,8 +202,8 @@ public final class GraphicView implements View {
 		graphics.setFont(new Font("Arial", Font.BOLD, 16));
 		graphics.drawString(String.valueOf(index), x + 12, y + 26);
 
-		graphics.setFont(new Font("Arial", Font.PLAIN, 13));
-		drawCenteredString(graphics, card.toString(), x, y + 80, CARD_WIDTH);
+		graphics.setFont(new Font("Arial", Font.BOLD, 18));
+		drawCenteredString(graphics, card.toString(), x, y + 100, CARD_WIDTH);
 	}
 
 	private void drawActionButtons(Graphics2D graphics, boolean canDiscard, boolean hasSelectedCards, int screenWidth,
