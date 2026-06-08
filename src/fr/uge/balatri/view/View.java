@@ -10,15 +10,11 @@ public interface View {
 
 	void displayGameState(GameState gameState);
 
-	boolean askAction(GameState gameState);
+	PlayerAction askTurn(GameState gameState);
 
-	Set<Integer> askCardSelection();
+	void displayBlindBeaten(GameState gameState, Planet planet);
 
-	Set<Integer> askDiscardSelection();
-
-	void displayBlindBeaten(Planet planet);
-
-	void displayTurnResult(Combination combination, int chipsCard, int scoreGained);
+	void displayTurnResult(GameState gameState, Combination combination, int chipsCard, int scoreGained);
 
 	void displayGameOver(int totalScore, boolean isWon);
 }
